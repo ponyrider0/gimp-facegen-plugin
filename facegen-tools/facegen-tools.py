@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+#
+# GIMP-facegen-tools plugin, v1.1
+#
 
 from gimpfu import *
 from array import array
@@ -97,12 +100,13 @@ def calculate_agemap(image, drawable, facegen, baselayer):
             # agemap/64 = facegen / base
             # agemap = (facegen / base) * 64
 
-            fp_red = max( float(base_pixels[(x+width*y)*4+0]), 0.1 )
-            fp_green = max( float(base_pixels[(x+width*y)*4+1]), 0.1 )
-            fp_blue = max( float(base_pixels[(x+width*y)*4+2]), 0.1 )
-            fp_red = float(facegen_pixels[(x+width*y)*4+0]) / fp_red * 64.0
-            fp_green = float(facegen_pixels[(x+width*y)*4+1]) / fp_green * 64.0
-            fp_blue = float(facegen_pixels[(x+width*y)*4+2]) / fp_blue * 64.0
+            # clap minimum value at 5.0 (2% of 255) to decrease artifacts from extreme fraction values in agemap
+            fp_red = max( float(base_pixels[(x+width*y)*4+0]), 5.0 )
+            fp_green = max( float(base_pixels[(x+width*y)*4+1]), 5.0 )
+            fp_blue = max( float(base_pixels[(x+width*y)*4+2]), 5.0 )
+            fp_red = max( float(facegen_pixels[(x+width*y)*4+0]), 5.0) / fp_red * 64.0
+            fp_green = max( float(facegen_pixels[(x+width*y)*4+1]), 5.0) / fp_green * 64.0
+            fp_blue = max( float(facegen_pixels[(x+width*y)*4+2]), 5.0) / fp_blue * 64.0
             result_red = min( int(fp_red), 255 )
             result_green = min( int(fp_green), 255 )
             result_blue = min( int(fp_blue), 255 )

@@ -1,4 +1,8 @@
-GIMP-FaceGen-Tools
+GIMP-FaceGen-Tools, v1.1
+2020-Jan-2
+
+Changes v1.1:
+Modified reverse algorithm to decrease artifacts when reading zero values in Base textures.
 
 Description:
 Gimp-Python based plugin for rendering, baking and reverse-calculating FaceGen Textures, Age maps, Detail maps.
