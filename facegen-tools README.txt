@@ -1,5 +1,11 @@
-GIMP-FaceGen-Tools, v1.1
+GIMP-FaceGen-Tools, v1.3
 2020-Jan-2
+
+Changes v1.3:
+Added automatic save and/or export of normal map operations to XCF and DDS files.
+
+Changes v1.2:
+Added Oblivion combined RGBA normal map functions for splitting/combining component RGB normal maps + Alpha specular maps.
 
 Changes v1.1:
 Modified reverse algorithm to decrease artifacts when reading zero values in Base textures.
