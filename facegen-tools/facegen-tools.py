@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 #
-# GIMP-facegen-tools plugin, v1.3
+# GIMP-facegen-tools plugin, v1.4
 #
 
 from gimpfu import *
 from array import array
 import os
 
-def split_norm_and_spec(image, drawable, save_xcf):
+def split_norm_and_spec(image, drawable, save_xcf, save_png):
     gimp.context_push()
     image.undo_group_start()
 
-    if save_xcf:
+    if save_xcf or save_png:
         if image.filename is None:
             image.filename = "~/untitled"
         path, filename = os.path.split(image.filename)
@@ -37,6 +37,14 @@ def split_norm_and_spec(image, drawable, save_xcf):
         spec_image.filename = path + "/" + spec_filename
         pdb.gimp_file_save(spec_image, spec_image.layers[0], path + "/" + spec_filename, spec_filename)
 
+    if save_png:
+        pdb.file_png_save_defaults(normalmap_image, normalmap_image.layers[0],
+                          path + "/" + filename_stem + "_norm.png",
+                          filename_stem + "_norm.png")
+        pdb.file_png_save_defaults(spec_image, spec_image.layers[0],
+                          path + "/" + filename_stem + "_spec.png",
+                          filename_stem + "_spec.png")        
+
     gimp.Display(normalmap_image)
     gimp.Display(spec_image)
     gimp.displays_flush()
@@ -47,11 +55,11 @@ def split_norm_and_spec(image, drawable, save_xcf):
     return
 
 
-def combine_norm_and_spec(image, drawable, normalmap, specmap, save_xcf, export_dds):
+def combine_norm_and_spec(image, drawable, normalmap, specmap, save_xcf, save_dds):
     gimp.context_push()
     image.undo_group_start()
 
-    if save_xcf or export_dds: 
+    if save_xcf or save_dds: 
         if image.filename is None:
             image.filename = "~/untitled"
         path, filename = os.path.split(image.filename)
@@ -73,7 +81,7 @@ def combine_norm_and_spec(image, drawable, normalmap, specmap, save_xcf, export_
         combined_image.filename = path + "/" + filename_stem + "_combiend.xcf"
         pdb.gimp_file_save(combined_image, combined_image.layers[0], path + "/" + filename_stem + "_combined.xcf", filename_stem + "_combined.xcf")
 
-    if export_dds:
+    if save_dds:
         pdb.file_dds_save(combined_image, combined_image.layers[0], #image, drawyable/layer
                           path + "/" + filename_stem + "_n.dds", filename_stem + "_n.dds", #filename, raw-filename
                           3, # compression: 0=none, 1=bc1/dxt1, 2=bc2/dxt3, 3=bc3/dxt5, 4=BC3n/dxt5nm, ... 8=alpha exponent... 
@@ -230,8 +238,8 @@ register(
         (PF_DRAWABLE, "drawable", "Input drawable", None),
         (PF_IMAGE, "normmap",     "Normal Map", None), 
         (PF_IMAGE, "specmap",     "Specular Map", None),
-        (PF_TOGGLE, "save_xcf",   "Save XCF", False),
-        (PF_TOGGLE, "export_dds", "Export DDS", False),
+        (PF_TOGGLE, "save_xcf",   "Save to XCF", False),
+        (PF_TOGGLE, "save_dds",   "Save to DDS", False),
     ],
     [],
     combine_norm_and_spec,
@@ -247,7 +255,8 @@ register(
     [
         (PF_IMAGE, "image",       "Input image", None),
         (PF_DRAWABLE, "drawable", "Input drawable", None),
-        (PF_TOGGLE, "save_xcf",   "Save XCF", False),
+        (PF_TOGGLE, "save_xcf",   "Save to XCF", False),
+        (PF_TOGGLE, "save_png",   "Save to PNG", False),
     ],
     [],
     split_norm_and_spec,

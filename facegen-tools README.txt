@@ -1,14 +1,5 @@
-GIMP-FaceGen-Tools, v1.3
-2020-Jan-2
-
-Changes v1.3:
-Added automatic save and/or export of normal map operations to XCF and DDS files.
-
-Changes v1.2:
-Added Oblivion combined RGBA normal map functions for splitting/combining component RGB normal maps + Alpha specular maps.
-
-Changes v1.1:
-Modified reverse algorithm to decrease artifacts when reading zero values in Base textures.
+GIMP-FaceGen-Tools, v1.4
+2020-Jan-5
 
 Description:
 Gimp-Python based plugin for rendering, baking and reverse-calculating FaceGen Textures, Age maps, Detail maps.
@@ -37,3 +28,17 @@ Reverse-Calculating an AgeMap from a hand-painted/custom FaceGen Texture:
 5. Select "Filters->FaceGen Tools->Calculate Age Map...".
 6. Select proper layer corresponding to custom FaceGen Texture and Base Texture. Click OK.
 7. Once the progress bar completes, copy/paste newly created age map to new file and export as new DDS file.
+
+Change Log:
+v1.4:
+Added option for automatic save to PNG when splitting norm and spec maps.
+
+v1.3:
+Added automatic save and/or export of normal map operations to XCF and DDS files.
+
+v1.2:
+Added Oblivion combined RGBA normal map functions for splitting/combining component RGB normal maps + Alpha specular maps.
+
+v1.1:
+Modified reverse algorithm to decrease artifacts when reading zero values in Base textures.
+
