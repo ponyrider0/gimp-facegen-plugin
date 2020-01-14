@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# GIMP-facegen-tools plugin, v1.4
+# GIMP-facegen-tools plugin, v1.5
 #
 
 from gimpfu import *
@@ -9,7 +9,8 @@ import os
 
 def split_norm_and_spec(image, drawable, save_xcf, save_png):
     gimp.context_push()
-    image.undo_group_start()
+#    image.undo_group_start()
+    pdb.gimp_image_undo_freeze(image)
 
     if save_xcf or save_png:
         if image.filename is None:
@@ -49,7 +50,8 @@ def split_norm_and_spec(image, drawable, save_xcf, save_png):
     gimp.Display(spec_image)
     gimp.displays_flush()
 
-    image.undo_group_end()
+#    image.undo_group_end()
+    pdb.gimp_image_undo_thaw(image)
     gimp.context_pop()
     
     return
@@ -57,7 +59,8 @@ def split_norm_and_spec(image, drawable, save_xcf, save_png):
 
 def combine_norm_and_spec(image, drawable, normalmap, specmap, save_xcf, save_dds):
     gimp.context_push()
-    image.undo_group_start()
+#    image.undo_group_start()
+    pdb.gimp_image_undo_freeze(normalmap)
 
     if save_xcf or save_dds: 
         if image.filename is None:
@@ -69,13 +72,19 @@ def combine_norm_and_spec(image, drawable, normalmap, specmap, save_xcf, save_dd
             pdb.gimp_message(error_text)
         filename_stem, notused_ext = os.path.splitext( filename )
 
-    r_image, g_image, b_image, notused = pdb.plug_in_decompose(normalmap, drawable, "RGB", 0)
+    work_image = normalmap.duplicate()
+    # flatten all layers before decompose/compose step
+    flat_layer = work_image.flatten()
+
+    r_image, g_image, b_image, notused = pdb.plug_in_decompose(work_image, flat_layer, "RGB", 0)
     combined_image = pdb.plug_in_compose(r_image, None, g_image, b_image, specmap, "RGBA")
 
     gimp.delete(r_image)
     gimp.delete(g_image)
     gimp.delete(b_image)
     gimp.delete(notused)
+    gimp.delete(flat_layer)
+    gimp.delete(work_image)
 
     if save_xcf:
         combined_image.filename = path + "/" + filename_stem + "_combiend.xcf"
@@ -101,7 +110,8 @@ def combine_norm_and_spec(image, drawable, normalmap, specmap, save_xcf, save_dd
     gimp.Display(combined_image)
     gimp.displays_flush()
 
-    image.undo_group_end()
+    pdb.gimp_image_undo_thaw(normalmap)
+#    image.undo_group_end()
     gimp.context_pop()
     
     return

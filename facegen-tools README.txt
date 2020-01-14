@@ -1,5 +1,5 @@
-GIMP-FaceGen-Tools, v1.4
-2020-Jan-5
+GIMP-FaceGen-Tools, v1.5
+2020-Jan-9
 
 Description:
 Gimp-Python based plugin for rendering, baking and reverse-calculating FaceGen Textures, Age maps, Detail maps.
@@ -30,6 +30,9 @@ Reverse-Calculating an AgeMap from a hand-painted/custom FaceGen Texture:
 7. Once the progress bar completes, copy/paste newly created age map to new file and export as new DDS file.
 
 Change Log:
+v1.5:
+Combine normal/spec map function now does a non-destructive flatten layers step prior to combine.
+
 v1.4:
 Added option for automatic save to PNG when splitting norm and spec maps.
 
